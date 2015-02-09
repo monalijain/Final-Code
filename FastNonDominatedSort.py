@@ -2,17 +2,22 @@ __author__ = 'MJ'
 
 import operator
 
+#Divide the population into fronts
 def FastNonDominatedSort(Rt):
     F={}
     FrontOfPopulation={}
     PopulationStore=Rt.items()
+    
     length=len(PopulationStore)
-
+    
+#Sorting the population on the basis of netPL/Total Trades, so set num=0, othernum=1
     num=0
     othernum=1
+    
     #Sorting on the basis of first objective function
     PopulationStore.sort(key=lambda x: x[1][num])
-
+    
+#If there is only one individual with the highest value of the objective function, assign it front 1 rightaway, else work on the entire population 
     if(PopulationStore[length-1][1][num]!=PopulationStore[length-2][1][num]):
         FrontOfPopulation[PopulationStore[length-1][0]]=1
         #print FrontOfPopulation
@@ -23,6 +28,9 @@ def FastNonDominatedSort(Rt):
         adjacentFront_1=0
 
     while(t>0):
+#If there are two or more individuals with the same value of objective function, then store the value of their other objective function
+#and sort them on the basis of that, and assign them fronts
+#Else assign them front=frontOfadjacentindividual+1
         if(PopulationStore[t][1][num]==PopulationStore[t-1][1][num]):
             store={}
             store[t]=[PopulationStore[t][0],PopulationStore[t][1][othernum]]
@@ -69,7 +77,8 @@ def FastNonDominatedSort(Rt):
 
  #   print FrontOfPopulation
 
-#Sorting on the basis of second objective function
+#Sorting on the basis of second objective function , set num=1, othernum=0
+
     num=1
     othernum=0
     #Sorting on the basis of first objective function
@@ -84,6 +93,7 @@ def FastNonDominatedSort(Rt):
         t=length-1
         adjacentFront_1=0
 
+#Calculate the fronts again in the same manner, just assign the individual the minimum of the two fronts 
     while(t>0):
         if(PopulationStore[t][1][num]==PopulationStore[t-1][1][num]):
             store={}
@@ -134,7 +144,8 @@ def FastNonDominatedSort(Rt):
 
     for i in range(1,1+counter):
        F[i]={}
-
+       
+#Store the frontsid, individualid, performance measures
     for p in FrontOfPopulation:
         #print p
         F[FrontOfPopulation[p]][p]=Rt[p]
